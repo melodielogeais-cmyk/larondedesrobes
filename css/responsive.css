@@ -1,0 +1,136 @@
+/* =========================================================
+   La Ronde des Robes — Responsive
+   Mobile-first : breakpoints 480 / 768 / 1024 / 1280
+   ========================================================= */
+
+/* ---------- ≤ 1024px : tablette ---------- */
+@media (max-width: 1024px) {
+  .footer-inner {
+    grid-template-columns: 1fr 1fr;
+  }
+  .footer-social { grid-column: 1 / -1; }
+}
+
+/* ---------- ≤ 768px : mobile ---------- */
+@media (max-width: 768px) {
+
+  :root { --header-h: 70px; }
+
+  .section { padding: 4rem 0; }
+
+  /* Header / nav mobile */
+  .nav-toggle { display: flex; }
+
+  .nav-list {
+    position: fixed;
+    top: var(--header-h);
+    left: 0; right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(8px);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 1.5rem 1.5rem 2rem;
+    transform: translateY(-110%);
+    transition: transform 0.35s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    max-height: calc(100vh - var(--header-h));
+    overflow-y: auto;
+  }
+  .nav-list.is-open {
+    transform: translateY(0);
+  }
+  .nav-list li { width: 100%; }
+  .nav-list a {
+    display: block;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--rose-poudre);
+    font-size: 1.05rem;
+  }
+  .nav-list a:not(.btn)::after { display: none; }
+
+  .nav-cta-mobile { display: block; margin-top: 1rem; }
+  .nav-cta-mobile a.btn {
+    display: block;
+    width: 100%;
+    border-bottom: 0;
+  }
+  .nav-cta-desktop { display: none; }
+
+  .logo-text { font-size: 1.35rem; }
+  .logo-img { height: 38px; }
+
+  /* Hero */
+  .hero { min-height: 80vh; }
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .btn { width: 100%; }
+
+  /* Histoire */
+  .histoire-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .histoire-visual { order: -1; }
+  .floating-quote {
+    bottom: -1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 1.4rem;
+    max-width: 90%;
+  }
+
+  /* Services / témoignages : empilés */
+  .services-grid,
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  /* Infos */
+  .infos-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  /* Form */
+  .contact-form { padding: 1.75rem 1.25rem; }
+  .form-row { grid-template-columns: 1fr; gap: 0; }
+  .form-row .form-group { margin-bottom: 1.25rem; }
+
+  /* Footer */
+  .footer-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .footer-nav ul { justify-content: center; }
+  .social-list { justify-content: center; }
+  .footer-bottom {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+/* ---------- ≤ 480px : très petit mobile ---------- */
+@media (max-width: 480px) {
+  .container { padding: 0 1.25rem; }
+
+  .hero-content { padding: 3rem 1rem; }
+  .hero-mention { margin-bottom: 1.75rem; }
+
+  .section { padding: 3.5rem 0; }
+  .section-header { margin-bottom: 2.5rem; }
+
+  .service-card,
+  .testimonial-card { padding: 1.75rem 1.25rem; }
+
+  .contact-form { padding: 1.5rem 1rem; }
+  .btn { padding: 0.75rem 1.25rem; font-size: 0.9rem; }
+  .btn-lg { padding: 0.9rem 1.5rem; }
+}
+
+/* ---------- ≥ 1280px : large desktop ---------- */
+@media (min-width: 1280px) {
+  .container { padding: 0 2rem; }
+  .section { padding: 7rem 0; }
+}
