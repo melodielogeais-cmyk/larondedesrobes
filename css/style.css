@@ -457,7 +457,7 @@ h1, h2, h3, h4 { margin: 0; }
 /* ---------- 9. Histoire ---------- */
 .section-histoire {
   background: linear-gradient(180deg, var(--rose-pale) 0%, var(--rose-blush) 50%, var(--rose-pale) 100%);
-  padding: clamp(4rem, 6vw, 7rem) 0;
+  padding: clamp(4rem, 6vw, 7rem) 0 clamp(2.5rem, 4vw, 4rem);
   overflow: hidden;
 }
 
@@ -622,9 +622,39 @@ h1, h2, h3, h4 { margin: 0; }
 }
 
 /* ---------- 10. Services ---------- */
+/* Séparateur ornemental entre sections */
+.section-ornement {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: 2.5rem 0;
+  background: var(--rose-pale);
+}
+
+.section-ornement-line {
+  display: block;
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--or-rose));
+}
+
+.section-ornement-line:last-child {
+  background: linear-gradient(to left, transparent, var(--or-rose));
+}
+
+.section-ornement-diamond {
+  display: block;
+  width: 6px;
+  height: 6px;
+  background: var(--or-rose);
+  transform: rotate(45deg);
+  opacity: 0.8;
+}
+
 .section-services {
   background: var(--rose-pale);
-  padding: 60px 0 80px;
+  padding: 0 0 80px;
 }
 
 /* En-tête centré */
