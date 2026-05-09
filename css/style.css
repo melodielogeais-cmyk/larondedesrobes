@@ -776,8 +776,21 @@ h1, h2, h3, h4 { margin: 0; }
 
 /* ---------- 11. Témoignages ---------- */
 .section-temoignages {
-  background: var(--bordeaux);
+  position: relative;
   padding: 120px 0;
+  background-image: url('../images/photos-boutique/hero-boutique.png');
+  background-size: cover;
+  background-position: center 30%;
+  background-attachment: fixed;
+  isolation: isolate;
+}
+
+.section-temoignages::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 6, 12, 0.78);
+  z-index: -1;
 }
 
 .temoignages-header {
