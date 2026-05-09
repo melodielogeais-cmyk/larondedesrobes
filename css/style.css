@@ -1168,4 +1168,393 @@ h1, h2, h3, h4 { margin: 0; }
   .pull-quote-line { width: 100% !important; }
   .signature-manuscript { clip-path: none !important; }
   html { scroll-behavior: auto; }
+  #intro-overlay { display: none !important; }
 }
+
+/* =========================================================
+   18. SCROLL CANVAS — Animation cinématique
+   ========================================================= */
+
+/* --- Loader --- */
+.scroll-loader {
+  position: fixed;
+  inset: 0;
+  background: #0a0608;
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.7s ease;
+}
+
+.scroll-loader-inner {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.scroll-loader-name {
+  font-family: var(--font-script);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: var(--ivoire);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.scroll-loader-track {
+  width: 180px;
+  height: 1px;
+  background: rgba(255,255,255,0.12);
+  position: relative;
+}
+
+.scroll-loader-fill {
+  position: absolute;
+  left: 0; top: 0;
+  height: 100%;
+  width: 0%;
+  background: var(--or-rose);
+  transition: width 0.15s ease;
+}
+
+.scroll-loader-pct {
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: rgba(255,255,255,0.35);
+  margin: 0;
+}
+
+/* --- Section scroll --- */
+.scroll-intro {
+  height: 550vh;
+  position: relative;
+}
+
+/* --- Canvas --- */
+.scroll-canvas {
+  position: sticky;
+  top: 0;
+  display: block;
+  width: 100%;
+  height: 100vh;
+  z-index: 500;
+  will-change: opacity;
+  transition: opacity 0.05s linear;
+}
+
+/* --- Nom de la boutique sur canvas --- */
+.scroll-brand {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 501;
+  text-align: center;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+}
+
+.scroll-brand-eyebrow {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  display: block;
+}
+
+.scroll-brand-name {
+  font-family: var(--font-script);
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  color: #fff;
+  margin: 0;
+  line-height: 1.05;
+  text-shadow: 0 2px 40px rgba(0,0,0,0.5);
+}
+
+/* --- Invitation à scroller --- */
+.scroll-hint {
+  position: fixed;
+  bottom: 7vh;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 501;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.scroll-hint-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  white-space: nowrap;
+}
+
+.scroll-hint-line {
+  display: block;
+  width: 1px;
+  height: 36px;
+  background: rgba(255,255,255,0.4);
+  animation: hint-drop 1.8s ease-in-out infinite;
+  animation-delay: 2s;
+  transform-origin: top center;
+}
+
+@keyframes hint-drop {
+  0%, 100% { transform: scaleY(0.6) translateY(0);   opacity: 0.4; }
+  50%       { transform: scaleY(1)   translateY(4px);  opacity: 0.9; }
+}
+
+/* =========================================================
+   19. ATELIER CRÉATIF — Croquis interactif
+   ========================================================= */
+
+.section-atelier {
+  background: linear-gradient(180deg, var(--rose-pale) 0%, var(--rose-blush) 40%, var(--rose-pale) 100%);
+}
+
+.atelier-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.atelier-h2 {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 400;
+  color: var(--bordeaux);
+  margin: 0.5rem 0 0;
+}
+
+.atelier-subtitle {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--gris-perle);
+  margin: 0.75rem 0 0;
+}
+
+.atelier-workspace {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 5rem;
+  align-items: start;
+  justify-content: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ——— Croquis SVG ——— */
+.atelier-canvas-wrap {
+  position: relative;
+  width: 300px;
+  margin: 0 auto;
+  filter: drop-shadow(0 8px 32px rgba(92,31,46,0.08));
+}
+
+.robe-svg {
+  display: block;
+  width: 300px;
+  height: auto;
+  background: var(--rose-pale);
+}
+
+.robe-zone {
+  fill: transparent;
+  transition: fill 0.45s ease;
+  cursor: pointer;
+}
+
+.robe-zone:hover {
+  filter: brightness(0.96);
+}
+
+.robe-contour {
+  fill: none;
+  stroke: var(--noir-doux);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.robe-details {
+  fill: var(--noir-doux);
+  stroke: var(--noir-doux);
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  fill-opacity: 0.2;
+  stroke-opacity: 0.35;
+  pointer-events: none;
+}
+
+#atelier-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+/* ——— Panneau outils ——— */
+.atelier-tools {
+  padding-top: 1rem;
+}
+
+.tool-section {
+  margin-bottom: 2rem;
+}
+
+.tool-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--gris-perle);
+  display: block;
+  margin-bottom: 0.875rem;
+}
+
+.mode-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mode-btn {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.65rem 1.3rem;
+  border: 1px solid rgba(138,123,126,0.4);
+  background: transparent;
+  color: var(--gris-perle);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mode-btn.active {
+  background: var(--bordeaux);
+  color: var(--rose-pale);
+  border-color: var(--bordeaux);
+}
+
+.mode-btn:not(.active):hover {
+  border-color: var(--bordeaux);
+  color: var(--bordeaux);
+}
+
+.color-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.color-swatch {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 0;
+  outline: none;
+}
+
+.color-swatch:hover {
+  transform: scale(1.15);
+}
+
+.color-swatch.active {
+  transform: scale(1.2);
+  box-shadow: 0 0 0 2px var(--creme), 0 0 0 4px var(--bordeaux);
+}
+
+.brush-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--rose-poudre);
+  outline: none;
+  cursor: pointer;
+}
+.brush-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bordeaux);
+  cursor: pointer;
+  border: 2px solid var(--rose-pale);
+  box-shadow: 0 2px 6px rgba(92,31,46,0.2);
+}
+
+.tool-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tool-action-btn {
+  display: block;
+  width: 100%;
+  padding: 0.65rem 1rem;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: 1px solid rgba(138,123,126,0.4);
+  background: transparent;
+  color: var(--gris-perle);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.tool-action-btn:hover {
+  border-color: var(--bordeaux);
+  color: var(--bordeaux);
+}
+
+.atelier-hint {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--gris-perle);
+  line-height: 1.7;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Responsive atelier */
+@media (max-width: 768px) {
+  .atelier-workspace {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .atelier-canvas-wrap {
+    width: 260px;
+  }
+  .robe-svg { width: 260px; }
+}
+

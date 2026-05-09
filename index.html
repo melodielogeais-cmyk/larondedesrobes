@@ -37,7 +37,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=EB+Garamond:ital,wght@0,400;1,400&family=Inter:wght@300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=5">
   <link rel="stylesheet" href="css/responsive.css">
 
   <!-- Schema.org LocalBusiness JSON-LD -->
@@ -79,6 +79,34 @@
 <body>
   <a href="#main" class="skip-link">Aller au contenu principal</a>
 
+  <!-- ============ LOADER ============ -->
+  <div id="scroll-loader" class="scroll-loader" aria-hidden="true">
+    <div class="scroll-loader-inner">
+      <p class="scroll-loader-name">La Ronde des Robes</p>
+      <div class="scroll-loader-track">
+        <div class="scroll-loader-fill" id="scroll-loader-fill"></div>
+      </div>
+      <p class="scroll-loader-pct" id="scroll-loader-pct">0 %</p>
+    </div>
+  </div>
+
+  <!-- ============ SCROLL ANIMATION — Canvas séquence de frames ============ -->
+  <section id="scroll-intro" class="scroll-intro" aria-hidden="true">
+    <canvas id="scroll-canvas" class="scroll-canvas"></canvas>
+
+    <!-- Nom de la boutique -->
+    <div class="scroll-brand" id="scroll-brand" aria-hidden="true">
+      <span class="scroll-brand-eyebrow">Maison de Couture</span>
+      <p class="scroll-brand-name">La Ronde<br>des Robes</p>
+    </div>
+
+    <!-- Invitation à scroller -->
+    <div class="scroll-hint" id="scroll-hint" aria-hidden="true">
+      <span class="scroll-hint-label">Défiler pour entrer</span>
+      <span class="scroll-hint-line"></span>
+    </div>
+  </section>
+
   <!-- Curseur custom -->
   <div class="cursor" id="cursor" aria-hidden="true"></div>
 
@@ -93,6 +121,7 @@
         <ul class="nav-list" id="nav-list">
           <li><a href="#histoire">Histoire</a></li>
           <li><a href="#services">Services</a></li>
+          <li><a href="#atelier">Atelier</a></li>
           <li><a href="#temoignages">Témoignages</a></li>
           <li><a href="#infos">Infos</a></li>
           <li><a href="#contact">Contact</a></li>
@@ -118,6 +147,7 @@
       <ul class="mobile-nav-list">
         <li><a href="#histoire">Histoire</a></li>
         <li><a href="#services">Services</a></li>
+        <li><a href="#atelier">Atelier</a></li>
         <li><a href="#temoignages">Témoignages</a></li>
         <li><a href="#infos">Infos</a></li>
         <li><a href="#contact">Contact</a></li>
@@ -248,6 +278,127 @@
           </article>
 
         </div>
+      </div>
+    </section>
+
+    <!-- ============ ATELIER CRÉATIF ============ -->
+    <section class="section section-atelier" id="atelier" aria-label="Atelier créatif">
+      <div class="container">
+
+        <div class="atelier-header">
+          <p class="eyebrow eyebrow--center gsap-reveal">ATELIER CRÉATIF</p>
+          <h2 class="atelier-h2 gsap-reveal">Dessinez votre robe.</h2>
+          <p class="atelier-subtitle gsap-reveal">Choisissez vos couleurs, complétez le croquis à votre image.</p>
+        </div>
+
+        <div class="atelier-workspace gsap-reveal">
+
+          <!-- Croquis SVG interactif -->
+          <div class="atelier-canvas-wrap" id="atelier-canvas-wrap">
+            <svg class="robe-svg" id="robe-svg" viewBox="0 0 300 540" xmlns="http://www.w3.org/2000/svg" aria-label="Croquis de robe à colorier">
+
+              <!-- Zones colorables -->
+              <path id="zone-jupe" class="robe-zone" title="Jupe"
+                d="M 102 226 C 98 242, 88 270, 75 310 C 55 375, 30 445, 10 528 L 290 528 C 270 445, 245 375, 225 310 C 212 270, 202 242, 198 226 Z"/>
+
+              <path id="zone-corsage" class="robe-zone" title="Corsage"
+                d="M 82 88 C 100 82, 120 92, 132 104 C 138 110, 144 112, 150 110 C 156 112, 162 110, 168 104 C 180 92, 200 82, 218 88 C 226 102, 223 142, 218 172 C 214 190, 208 206, 196 210 L 104 210 C 92 206, 86 190, 82 172 C 77 142, 74 102, 82 88 Z"/>
+
+              <path id="zone-ceinture" class="robe-zone" title="Ceinture"
+                d="M 104 208 C 125 202, 175 202, 196 208 L 198 228 C 175 234, 125 234, 102 228 Z"/>
+
+              <!-- Contour principal -->
+              <path class="robe-contour"
+                d="M 82 88 C 100 82, 120 92, 132 104 C 138 110, 144 112, 150 110 C 156 112, 162 110, 168 104 C 180 92, 200 82, 218 88 C 226 102, 223 142, 218 172 C 214 190, 208 206, 196 210 C 200 218, 200 224, 198 228 C 212 244, 222 270, 225 310 C 245 375, 270 445, 290 528 L 10 528 C 30 445, 55 375, 75 310 C 88 270, 98 244, 102 228 C 100 224, 100 218, 104 208 C 92 206, 86 190, 82 172 C 77 142, 74 102, 82 88 Z"/>
+
+              <!-- Détails décoratifs (non colorables) -->
+              <g class="robe-details">
+                <!-- Coutures / baleinage corsage -->
+                <line x1="150" y1="112" x2="150" y2="210" stroke-dasharray="3,5"/>
+                <path d="M 116 94 C 114 130, 112 168, 111 210" stroke-dasharray="2,5"/>
+                <path d="M 184 94 C 186 130, 188 168, 189 210" stroke-dasharray="2,5"/>
+                <!-- Plis de la jupe -->
+                <path d="M 150 230 C 149 320, 147 420, 145 528"/>
+                <path d="M 135 231 C 128 316, 114 410, 92 528"/>
+                <path d="M 165 231 C 172 316, 186 410, 208 528"/>
+                <path d="M 120 232 C 108 316, 80 408, 52 528"/>
+                <path d="M 180 232 C 192 316, 220 408, 248 528"/>
+                <!-- Nœud à la taille -->
+                <path d="M 150 219 C 143 211, 132 211, 130 218 C 128 225, 137 229, 149 224"/>
+                <path d="M 150 219 C 157 211, 168 211, 170 218 C 172 225, 163 229, 151 224"/>
+                <ellipse cx="150" cy="220" rx="4" ry="3"/>
+                <path d="M 147 223 C 142 233, 138 240, 134 246"/>
+                <path d="M 153 223 C 158 233, 162 240, 166 246"/>
+                <!-- Ruché bas de jupe -->
+                <path d="M 14 516 C 34 510, 58 518, 78 512 C 98 506, 118 516, 138 510 C 158 504, 178 514, 198 508 C 218 502, 238 512, 258 506 C 274 501, 287 510, 288 510"/>
+                <path d="M 11 523 C 33 519, 57 525, 79 521 C 101 517, 125 525, 149 521 C 173 517, 197 525, 221 521 C 245 517, 267 523, 288 521"/>
+                <!-- Points de broderie corsage -->
+                <circle cx="138" cy="142" r="1.8"/>
+                <circle cx="150" cy="135" r="1.8"/>
+                <circle cx="162" cy="142" r="1.8"/>
+                <circle cx="144" cy="154" r="1.8"/>
+                <circle cx="156" cy="154" r="1.8"/>
+                <circle cx="150" cy="165" r="1.4"/>
+                <!-- Dentelle encolure -->
+                <path d="M 84 99 C 87 94, 91 94, 94 99"/>
+                <path d="M 94 94 C 97 89, 101 89, 104 94"/>
+                <path d="M 196 94 C 199 89, 203 89, 206 94"/>
+                <path d="M 206 99 C 209 94, 213 94, 216 99"/>
+              </g>
+            </svg>
+            <!-- Canvas de dessin libre par-dessus le SVG -->
+            <canvas id="atelier-canvas" aria-hidden="true"></canvas>
+          </div>
+
+          <!-- Panneau d'outils -->
+          <div class="atelier-tools">
+
+            <div class="tool-section">
+              <p class="tool-label">MODE</p>
+              <div class="mode-buttons">
+                <button class="mode-btn active" data-mode="fill" id="btn-mode-fill">
+                  <span>Colorier</span>
+                </button>
+                <button class="mode-btn" data-mode="draw" id="btn-mode-draw">
+                  <span>Dessiner</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="tool-section">
+              <p class="tool-label">PALETTE</p>
+              <div class="color-swatches" id="color-swatches">
+                <button class="color-swatch active" data-color="#FEF9F5" aria-label="Blanc ivoire" style="background:#FEF9F5;border:1px solid #d0c0c4;"></button>
+                <button class="color-swatch" data-color="#F5E0E5" aria-label="Rose blush" style="background:#F5E0E5;"></button>
+                <button class="color-swatch" data-color="#ECC8D0" aria-label="Rose poudré" style="background:#ECC8D0;"></button>
+                <button class="color-swatch" data-color="#C73E6E" aria-label="Rose framboise" style="background:#C73E6E;"></button>
+                <button class="color-swatch" data-color="#5C1F2E" aria-label="Bordeaux" style="background:#5C1F2E;"></button>
+                <button class="color-swatch" data-color="#E8D5B8" aria-label="Champagne" style="background:#E8D5B8;"></button>
+                <button class="color-swatch" data-color="#C9A57C" aria-label="Or rosé" style="background:#C9A57C;"></button>
+                <button class="color-swatch" data-color="#1A2040" aria-label="Bleu nuit" style="background:#1A2040;"></button>
+                <button class="color-swatch" data-color="#8A9E88" aria-label="Vert sauge" style="background:#8A9E88;"></button>
+                <button class="color-swatch" data-color="#C4A8C8" aria-label="Lilas" style="background:#C4A8C8;"></button>
+                <button class="color-swatch" data-color="#2A1F23" aria-label="Noir" style="background:#2A1F23;"></button>
+              </div>
+            </div>
+
+            <div class="tool-section" id="brush-section" style="display:none">
+              <p class="tool-label">ÉPAISSEUR DU TRAIT</p>
+              <input type="range" id="brush-size" min="1" max="14" value="3" class="brush-slider" aria-label="Épaisseur du pinceau">
+            </div>
+
+            <div class="tool-section tool-actions">
+              <button class="tool-action-btn" id="btn-erase-canvas">Effacer le dessin</button>
+              <button class="tool-action-btn" id="btn-reset-zones">Réinitialiser les couleurs</button>
+            </div>
+
+            <p class="atelier-hint" id="atelier-hint">
+              Cliquez sur une zone de la robe pour la colorier.
+            </p>
+
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -481,6 +632,7 @@
   <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/scroll-intro.js?v=1"></script>
+  <script src="js/main.js?v=6"></script>
 </body>
 </html>
