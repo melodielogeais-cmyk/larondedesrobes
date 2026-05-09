@@ -319,14 +319,14 @@
     trigger: '.atelier-stage',
     start: 'top 75%',
     once: true,
-    onEnter: () => goTo(0)
+    onEnter: () => goTo(1)
   });
 
   /* ============================================================
      SÉLECTEUR DE TAILLE — met à jour les croquis
   ============================================================ */
   const sizeBtns   = document.querySelectorAll('.size-btn');
-  let   currentSize = '42';
+  let   currentSize = '36';
 
   sizeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
