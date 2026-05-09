@@ -9,7 +9,7 @@
   const FRAME_COUNT  = 150;
   const LERP_FACTOR  = 0.09;   // Fluidité — plus bas = plus doux
   const FADE_START   = 0.78;   // % scroll à partir duquel le canvas s'efface
-  const HINT_HIDE_AT = 0.333;  // Cache le titre à la frame 50 (33% du scroll)
+  const HINT_HIDE_AT = 0.005;  // Cache le titre dès le début du scroll
 
   const canvas  = document.getElementById('scroll-canvas');
   const section = document.getElementById('scroll-intro');
@@ -131,14 +131,11 @@
       canvas.style.opacity = '1';
     }
 
-    /* Cache le nom + hint à la frame 50 */
+    /* Cache le nom + hint dès le premier scroll */
     if (!hintHidden && p > HINT_HIDE_AT) {
       hintHidden = true;
       if (typeof gsap !== 'undefined') {
-        gsap.to([brand, hint], {
-          opacity: 0, duration: 0.5, ease: 'power2.inOut',
-          onComplete: () => { brand?.remove(); hint?.remove(); }
-        });
+        gsap.to([brand, hint], { opacity: 0, duration: 0.35, ease: 'power2.inOut' });
       }
     }
   }
