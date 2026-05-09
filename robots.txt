@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /frames/
+Disallow: /merci.html
 
+# Sitemap
 Sitemap: https://larondedesrobes.fr/sitemap.xml

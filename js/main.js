@@ -17,7 +17,7 @@
   if (cursor && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     const setCursor = gsap.quickSetter(cursor, 'css');
     document.addEventListener('mousemove', e => setCursor({ x: e.clientX, y: e.clientY }));
-    document.querySelectorAll('a, button, [data-magnetic], .service-card, .robe-zone').forEach(el => {
+    document.querySelectorAll('a, button, [data-magnetic], .service-card').forEach(el => {
       el.addEventListener('mouseenter', () => cursor.classList.add('is-hovered'));
       el.addEventListener('mouseleave', () => cursor.classList.remove('is-hovered'));
     });
@@ -79,29 +79,36 @@
   }
 
   const startHeroAnim = () => {
-    const tl = gsap.timeline({ delay: 0.15 });
+    const tl = gsap.timeline({ delay: 0.2 });
 
-    tl.fromTo('#hero-image-side',
+    /* Fondu de l'overlay */
+    tl.fromTo('.hero-overlay',
       { opacity: 0 },
-      { opacity: 1, duration: 1.5, ease: 'power2.out' }
+      { opacity: 1, duration: 1.8, ease: 'power2.out' }
     );
+
     tl.to('.hero-eyebrow',
-      { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.9'
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=1'
     );
 
     if (heroTitle) {
       const letters = heroTitle.querySelectorAll('span[style]');
-      tl.to(letters, { opacity: 1, y: 0, duration: 0.5, stagger: 0.04, ease: 'power3.out' }, '-=0.3');
+      tl.to(letters, { opacity: 1, y: 0, duration: 0.6, stagger: 0.05, ease: 'power3.out' }, '-=0.4');
     }
 
     const goldBar = document.getElementById('hero-gold-bar');
-    if (goldBar) tl.to(goldBar, { width: '60px', duration: 0.9, ease: 'power3.out' }, '-=0.4');
+    if (goldBar) tl.to(goldBar, { width: '80px', duration: 1.1, ease: 'power3.out' }, '-=0.3');
 
     tl.to('.hero-lead',
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5'
+      { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' }, '-=0.6'
     );
-    tl.to(['.hero-rdv-tag', '.hero-discover'],
-      { opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power3.out' }, '-=0.4'
+    tl.to('.hero-rdv-tag',
+      { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.5'
+    );
+    tl.to('.hero-discover',
+      { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+        onComplete: () => document.querySelector('.hero-discover')?.classList.add('anim-ready')
+      }, '-=0.3'
     );
   };
 
@@ -136,6 +143,17 @@
   });
 
   /* ============================================================
+     HISTOIRE — grand titre + séparateur or
+  ============================================================ */
+  const histGoldSep = document.querySelector('.histoire-gold-sep');
+  if (histGoldSep) {
+    ScrollTrigger.create({
+      trigger: histGoldSep, start: 'top 88%', once: true,
+      onEnter: () => gsap.to(histGoldSep, { opacity: 1, scaleX: 1, duration: 1.2, ease: 'power3.out' })
+    });
+  }
+
+  /* ============================================================
      PULL QUOTE — lignes qui se tracent
   ============================================================ */
   const pullQuote = document.querySelector('.pull-quote');
@@ -156,13 +174,32 @@
   }
 
   /* ============================================================
-     SIGNATURE — révélation de gauche à droite
+     SIGNATURE — écriture à la main
   ============================================================ */
-  const signature = document.querySelector('.gsap-signature');
+  const signature    = document.querySelector('.gsap-signature');
+  const sigUnderline = document.querySelector('.signature-underline');
+
   if (signature) {
+    gsap.set(signature, { rotate: -4, transformOrigin: 'left center' });
+
     ScrollTrigger.create({
-      trigger: signature, start: 'top 86%', once: true,
-      onEnter: () => gsap.to(signature, { clipPath: 'inset(0 0% 0 0)', duration: 2, ease: 'power2.inOut' })
+      trigger: signature, start: 'top 88%', once: true,
+      onEnter: () => {
+        const tl = gsap.timeline();
+        tl.to(signature, {
+          clipPath: 'inset(0 0% 0 0)',
+          rotate: 0,
+          duration: 2,
+          ease: 'power2.inOut'
+        });
+        if (sigUnderline) {
+          tl.to(sigUnderline, {
+            width: '180px',
+            duration: 0.9,
+            ease: 'power2.out'
+          }, '-=0.6');
+        }
+      }
     });
   }
 
@@ -191,113 +228,120 @@
   });
 
   /* ============================================================
-     ATELIER ROBE — Croquis interactif
+     ATELIER — Slider 3-up + révélation SVG réel
   ============================================================ */
-  const svgEl  = document.getElementById('robe-svg');
-  const canvas = document.getElementById('atelier-canvas');
+  const sliderItems = Array.from(document.querySelectorAll('.slider-item'));
+  const infoCards   = document.querySelectorAll('.atelier-info-card');
+  const total       = sliderItems.length;
+  let   current     = 0;
+  let   animLocked  = false;
 
-  if (svgEl && canvas) {
-    const ctx = canvas.getContext('2d');
-    let selectedColor = '#FEF9F5';
-    let currentMode   = 'fill';
-    let isDrawing     = false;
-    let lastX = 0, lastY = 0;
+  /* Cache toutes les fiches au départ */
+  infoCards.forEach(card => gsap.set(card, { autoAlpha: 0 }));
 
-    /* Sync canvas sur taille réelle du SVG */
-    const syncCanvas = () => {
-      const r = svgEl.getBoundingClientRect();
-      if (r.width === 0) return;
-      canvas.width  = Math.round(r.width);
-      canvas.height = Math.round(r.height);
-      canvas.style.width  = r.width  + 'px';
-      canvas.style.height = r.height + 'px';
-    };
-    if (window.ResizeObserver) new ResizeObserver(syncCanvas).observe(svgEl);
-    syncCanvas();
-    setTimeout(syncCanvas, 500); // Retry after fonts/layout
+  function animateCardIn(card) {
+    const name  = card.querySelector('.atelier-info-name');
+    const quote = card.querySelector('.atelier-info-quote');
+    const desc  = card.querySelector('.atelier-info-desc');
+    const items = card.querySelectorAll('.atelier-info-fits li');
 
-    /* ——— Palette de couleurs ——— */
-    document.querySelectorAll('.color-swatch').forEach(sw => {
-      sw.addEventListener('click', function () {
-        selectedColor = this.dataset.color;
-        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
-        this.classList.add('active');
-      });
-    });
+    const tl = gsap.timeline({ delay: 0.1 });
 
-    /* ——— Modes Colorier / Dessiner ——— */
-    const hintEl      = document.getElementById('atelier-hint');
-    const brushSec    = document.getElementById('brush-section');
+    /* Carte visible */
+    tl.set(card, { autoAlpha: 1 });
 
-    document.querySelectorAll('.mode-btn').forEach(btn => {
-      btn.addEventListener('click', function () {
-        currentMode = this.dataset.mode;
-        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
+    /* Titre — révélation clip-path du bas */
+    if (name) {
+      gsap.set(name, { clipPath: 'inset(0 0 100% 0)', y: 10 });
+      tl.to(name, { clipPath: 'inset(0 0 0% 0)', y: 0, duration: 0.55, ease: 'power3.out' }, 0);
+    }
 
-        const isDrawMode = currentMode === 'draw';
-        if (brushSec)  brushSec.style.display        = isDrawMode ? 'block' : 'none';
-        canvas.style.pointerEvents                    = isDrawMode ? 'all'   : 'none';
-        svgEl.style.pointerEvents                     = isDrawMode ? 'none'  : 'all';
-        if (hintEl) hintEl.textContent = isDrawMode
-          ? 'Dessinez librement sur le croquis avec votre couleur choisie.'
-          : 'Cliquez sur une zone de la robe pour la colorier.';
-      });
-    });
+    /* Citation — fondu + légère remontée */
+    if (quote) {
+      gsap.set(quote, { opacity: 0, y: 12 });
+      tl.to(quote, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.2);
+    }
 
-    /* ——— Colorier les zones SVG ——— */
-    document.querySelectorAll('.robe-zone').forEach(zone => {
-      zone.addEventListener('click', function () {
-        if (currentMode !== 'fill') return;
-        /* Animation CSS transition via setAttribute + court GSAP flash */
-        this.setAttribute('fill', selectedColor);
-        gsap.fromTo(this, { opacity: 0.5 }, { opacity: 1, duration: 0.35, ease: 'power2.out' });
-      });
-    });
+    /* Description */
+    if (desc) {
+      gsap.set(desc, { opacity: 0, y: 10 });
+      tl.to(desc, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.35);
+    }
 
-    /* ——— Dessin libre sur canvas ——— */
-    const getPos = e => {
-      const r   = canvas.getBoundingClientRect();
-      const src = e.touches ? e.touches[0] : e;
-      return [src.clientX - r.left, src.clientY - r.top];
-    };
+    /* Liste — stagger item par item */
+    if (items.length) {
+      gsap.set(items, { opacity: 0, x: -12 });
+      tl.to(items, { opacity: 1, x: 0, duration: 0.4, stagger: 0.1, ease: 'power2.out' }, 0.45);
+    }
 
-    canvas.addEventListener('mousedown',  e => { isDrawing = true;  [lastX, lastY] = getPos(e); });
-    canvas.addEventListener('touchstart', e => { e.preventDefault(); isDrawing = true; [lastX, lastY] = getPos(e); }, { passive: false });
-
-    const drawLine = e => {
-      if (!isDrawing) return;
-      const [x, y] = getPos(e);
-      const size   = +(document.getElementById('brush-size')?.value ?? 3);
-      ctx.beginPath();
-      ctx.moveTo(lastX, lastY);
-      ctx.lineTo(x, y);
-      ctx.strokeStyle = selectedColor;
-      ctx.lineWidth   = size;
-      ctx.lineCap     = 'round';
-      ctx.lineJoin    = 'round';
-      ctx.stroke();
-      [lastX, lastY] = [x, y];
-    };
-
-    canvas.addEventListener('mousemove',  drawLine);
-    canvas.addEventListener('touchmove',  e => { e.preventDefault(); drawLine(e); }, { passive: false });
-    canvas.addEventListener('mouseup',    () => isDrawing = false);
-    canvas.addEventListener('touchend',   () => isDrawing = false);
-    canvas.addEventListener('mouseleave', () => isDrawing = false);
-
-    /* ——— Boutons reset ——— */
-    document.getElementById('btn-erase-canvas')?.addEventListener('click', () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    });
-
-    document.getElementById('btn-reset-zones')?.addEventListener('click', () => {
-      document.querySelectorAll('.robe-zone').forEach(z => {
-        z.setAttribute('fill', 'transparent');
-        gsap.fromTo(z, { opacity: 0.3 }, { opacity: 1, duration: 0.4 });
-      });
-    });
+    return tl;
   }
+
+  function goTo(idx) {
+    if (animLocked) return;
+    animLocked = true;
+    setTimeout(() => { animLocked = false; }, 600);
+
+    idx = (idx + total) % total;
+    const dressKey = sliderItems[idx].dataset.dress;
+
+    sliderItems.forEach((item, i) => {
+      const diff = (i - idx + total) % total;
+      item.classList.remove('is-active', 'is-prev', 'is-next');
+      if      (diff === 0)                   item.classList.add('is-active');
+      else if (diff === 1)                   item.classList.add('is-next');
+      else if (diff === total - 1 && i !== idx) item.classList.add('is-prev');
+    });
+
+    infoCards.forEach(card => {
+      gsap.killTweensOf(card);
+      if (card.id === `info-${dressKey}`) {
+        card.classList.add('is-active');
+        animateCardIn(card);
+      } else {
+        card.classList.remove('is-active');
+        gsap.set(card, { autoAlpha: 0 });
+      }
+    });
+
+    current = idx;
+  }
+
+  document.querySelector('.slider-prev')?.addEventListener('click', () => goTo(current - 1));
+  document.querySelector('.slider-next')?.addEventListener('click', () => goTo(current + 1));
+  sliderItems.forEach((item, i) => {
+    item.addEventListener('click', () => {
+      if (!item.classList.contains('is-active')) goTo(i);
+    });
+  });
+
+  ScrollTrigger.create({
+    trigger: '.atelier-stage',
+    start: 'top 75%',
+    once: true,
+    onEnter: () => goTo(0)
+  });
+
+  /* ============================================================
+     SÉLECTEUR DE TAILLE — met à jour les croquis
+  ============================================================ */
+  const sizeBtns   = document.querySelectorAll('.size-btn');
+  let   currentSize = '42';
+
+  sizeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentSize = btn.dataset.size;
+      sizeBtns.forEach(b => {
+        b.classList.toggle('is-active', b === btn);
+        b.setAttribute('aria-pressed', String(b === btn));
+      });
+      sliderItems.forEach(item => {
+        const dress = item.dataset.dress;
+        const img   = item.querySelector('.atelier-sketch-svg');
+        if (img) img.src = `images/Croquis/${dress}-${currentSize}.png`;
+      });
+    });
+  });
 
   /* ============================================================
      VALIDATION FORMULAIRE

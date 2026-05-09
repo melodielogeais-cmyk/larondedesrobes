@@ -1,0 +1,17 @@
+{
+  "name": "La Ronde des Robes",
+  "short_name": "La Ronde des Robes",
+  "description": "Boutique de robes de mariée et de soirée à Chalais, Charente — toutes tailles, sur mesure.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#FEF9F5",
+  "theme_color": "#C9A96E",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
