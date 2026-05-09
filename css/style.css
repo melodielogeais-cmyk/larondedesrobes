@@ -635,6 +635,9 @@ h1, h2, h3, h4 { margin: 0; }
 
 .services-header .eyebrow {
   color: var(--or-rose);
+  text-transform: none;
+  font-size: 13px;
+  letter-spacing: 0.12em;
 }
 
 .services-h2 {
