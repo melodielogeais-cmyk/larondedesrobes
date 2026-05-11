@@ -368,6 +368,26 @@
     setError(input, !ok); return ok;
   };
 
+  /* Overlay succès */
+  const successOverlay = document.getElementById('form-success-overlay');
+  const successClose   = document.getElementById('form-success-close');
+
+  const showSuccess = () => {
+    if (!successOverlay) return;
+    successOverlay.classList.add('is-visible');
+    successOverlay.setAttribute('aria-hidden', 'false');
+    successClose?.focus();
+  };
+  const hideSuccess = () => {
+    if (!successOverlay) return;
+    successOverlay.classList.remove('is-visible');
+    successOverlay.setAttribute('aria-hidden', 'true');
+  };
+
+  successClose?.addEventListener('click', hideSuccess);
+  successOverlay?.addEventListener('click', e => { if (e.target === successOverlay) hideSuccess(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && successOverlay?.classList.contains('is-visible')) hideSuccess(); });
+
   if (form) {
     const fields = form.querySelectorAll('input[required], textarea[required], input[type="email"], input[type="tel"]');
     fields.forEach(f => {
@@ -375,15 +395,42 @@
       f.addEventListener('input', () => { if (f.classList.contains('error')) validateField(f); });
     });
     form.addEventListener('submit', e => {
+      e.preventDefault();
       let ok = true;
       fields.forEach(f => { if (!validateField(f)) ok = false; });
       if (!ok) {
-        e.preventDefault();
         if (feedback) { feedback.textContent = 'Merci de vérifier les champs incorrects.'; feedback.className = 'form-feedback is-error'; }
         form.querySelector('.error')?.focus();
-      } else if (feedback) {
-        feedback.textContent = 'Envoi en cours…';
-        feedback.className = 'form-feedback';
+        return;
+      }
+      if (feedback) { feedback.textContent = 'Envoi en cours…'; feedback.className = 'form-feedback'; }
+      const btn = form.querySelector('.btn-submit');
+      if (btn) btn.disabled = true;
+
+      const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
+      if (isLocal) {
+        if (feedback) { feedback.textContent = ''; feedback.className = 'form-feedback'; }
+        form.reset();
+        if (btn) btn.disabled = false;
+        showSuccess();
+      } else {
+        fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(new FormData(form)).toString()
+        })
+          .then(res => {
+            if (!res.ok) throw new Error('Network error');
+            if (feedback) { feedback.textContent = ''; feedback.className = 'form-feedback'; }
+            form.reset();
+            if (btn) btn.disabled = false;
+            showSuccess();
+          })
+          .catch(() => {
+            if (feedback) { feedback.textContent = 'Une erreur est survenue. Contactez-nous directement par téléphone.'; feedback.className = 'form-feedback is-error'; }
+            if (btn) btn.disabled = false;
+          });
       }
     });
   }

@@ -1842,3 +1842,113 @@ a.contact-detail-value:hover { color: var(--or-rose); }
   margin: 0.75rem 0 0;
 }
 
+/* ---------- Overlay succès formulaire ---------- */
+.form-success-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 8, 18, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+
+.form-success-overlay.is-visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.form-success-card {
+  background: var(--bordeaux);
+  border: 1px solid rgba(201, 165, 124, 0.28);
+  padding: clamp(3rem, 6vw, 5rem) clamp(2.5rem, 5vw, 4.5rem);
+  max-width: 480px;
+  width: calc(100% - 3rem);
+  text-align: center;
+  transform: translateY(24px) scale(0.97);
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+  opacity: 0;
+}
+
+.form-success-overlay.is-visible .form-success-card {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  transition-delay: 0.08s;
+}
+
+.form-success-ornement {
+  margin-bottom: 1.6rem;
+}
+
+.fso-circle {
+  stroke-dasharray: 140;
+  stroke-dashoffset: 140;
+  transition: stroke-dashoffset 0.7s ease 0.35s;
+}
+.fso-check {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  transition: stroke-dashoffset 0.45s ease 0.9s;
+}
+
+.form-success-overlay.is-visible .fso-circle { stroke-dashoffset: 0; }
+.form-success-overlay.is-visible .fso-check  { stroke-dashoffset: 0; }
+
+.form-success-script {
+  font-family: var(--font-script);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  color: var(--or-rose);
+  margin: 0 0 0.6rem;
+  line-height: 1.1;
+}
+
+.form-success-titre {
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #FAF5EE;
+  margin: 0 0 1.2rem;
+}
+
+.form-success-texte {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: rgba(250, 245, 238, 0.75);
+  line-height: 1.7;
+  margin: 0 0 2.2rem;
+}
+
+.form-success-texte strong {
+  color: var(--or-rose);
+  font-weight: 500;
+}
+
+.form-success-close {
+  display: inline-block;
+  background: transparent;
+  border: 1px solid rgba(201, 165, 124, 0.45);
+  color: rgba(250, 245, 238, 0.65);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.75rem 2.2rem;
+  cursor: pointer;
+  transition: border-color 0.3s, color 0.3s, background 0.3s;
+}
+
+.form-success-close:hover {
+  border-color: var(--or-rose);
+  color: var(--or-rose);
+  background: rgba(201, 165, 124, 0.08);
+}
+

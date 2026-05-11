@@ -52,7 +52,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=EB+Garamond:ital,wght@0,400;1,400&family=Inter:wght@300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/style.css?v=50">
+  <link rel="stylesheet" href="css/style.css?v=51">
   <link rel="stylesheet" href="css/responsive.css">
 
   <!-- Schema.org — LocalBusiness -->
@@ -238,7 +238,6 @@
           <li><a href="#services">Services</a></li>
           <li><a href="#atelier">Atelier</a></li>
           <li><a href="#temoignages">Témoignages</a></li>
-          <li><a href="#infos">Infos</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
@@ -264,7 +263,6 @@
         <li><a href="#services">Services</a></li>
         <li><a href="#atelier">Atelier</a></li>
         <li><a href="#temoignages">Témoignages</a></li>
-        <li><a href="#infos">Infos</a></li>
         <li><a href="#contact">Contact</a></li>
         <li class="mobile-cta-item"><a href="#contact" class="mobile-cta">Prendre RDV</a></li>
       </ul>
@@ -565,55 +563,6 @@
     </section>
 
     <!-- ============ INFOS PRATIQUES ============ -->
-    <section class="section section-infos" id="infos" aria-label="Infos pratiques">
-      <div class="container">
-        <div class="infos-layout">
-
-          <div class="infos-left gsap-reveal">
-            <p class="eyebrow">VENIR NOUS RENCONTRER</p>
-            <h2 class="infos-h2">L'adresse.</h2>
-
-            <ul class="infos-list">
-              <li>
-                <span class="infos-label">Adresse</span>
-                <span class="infos-value">19 allée du Vercorin<br>16210 — Chalais</span>
-              </li>
-              <li>
-                <span class="infos-label">Téléphone</span>
-                <a class="infos-value infos-link" href="tel:+33647843213">06 47 84 32 13</a>
-              </li>
-              <li>
-                <span class="infos-label">Fondatrice</span>
-                <span class="infos-value">Jenna Logeais</span>
-              </li>
-              <li>
-                <span class="infos-label">Email</span>
-                <a class="infos-value infos-link" href="mailto:contact@larondedesrobes.fr">contact@larondedesrobes.fr</a>
-              </li>
-              <li>
-                <span class="infos-label">Horaires</span>
-                <span class="infos-value">Mardi — Samedi&nbsp;: 10h – 18h<br>Dimanche &amp; lundi&nbsp;: fermé</span>
-              </li>
-            </ul>
-
-            <p class="infos-mention"><em>Uniquement sur rendez-vous, pour vous offrir un moment d'attention exclusive.</em></p>
-          </div>
-
-          <div class="infos-right gsap-reveal">
-            <div class="map-frame">
-              <iframe
-                title="Carte d'accès à La Ronde des Robes"
-                src="https://www.google.com/maps?q=France&output=embed"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                allowfullscreen></iframe>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
     <!-- ============ CONTACT ============ -->
     <section class="section section-contact" id="contact" aria-label="Prendre rendez-vous">
       <div class="container">
@@ -632,7 +581,7 @@
               </div>
               <div class="contact-detail">
                 <span class="contact-detail-label">Adresse</span>
-                <span class="contact-detail-value">Chalais, Charente (16)</span>
+                <span class="contact-detail-value">19 allée du Vercorin<br>16210 — Chalais</span>
               </div>
               <div class="contact-detail">
                 <span class="contact-detail-label">Horaires</span>
@@ -723,7 +672,6 @@
       <a href="#services">Services</a>
       <a href="#atelier">Atelier</a>
       <a href="#temoignages">Témoignages</a>
-      <a href="#infos">Infos</a>
       <a href="#contact">Contact</a>
     </nav>
 
@@ -744,10 +692,26 @@
 
   </footer>
 
+  <!-- Notification de confirmation d'envoi -->
+  <div class="form-success-overlay" id="form-success-overlay" role="dialog" aria-modal="true" aria-label="Message envoyé" aria-hidden="true">
+    <div class="form-success-card">
+      <div class="form-success-ornement" aria-hidden="true">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle class="fso-circle" cx="24" cy="24" r="22" stroke="#C9A56E" stroke-width="1.5"/>
+          <polyline class="fso-check" points="14,25 21,32 34,17" stroke="#C9A56E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <p class="form-success-script">La Ronde des Robes</p>
+      <h3 class="form-success-titre">Message envoyé</h3>
+      <p class="form-success-texte">Merci pour votre message. Jenna vous répondra personnellement dans les <strong>48&nbsp;h</strong>.</p>
+      <button class="form-success-close" id="form-success-close" aria-label="Fermer">Fermer</button>
+    </div>
+  </div>
+
   <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="js/scroll-intro.js?v=7"></script>
-  <script src="js/main.js?v=22"></script>
+  <script src="js/main.js?v=23"></script>
 </body>
 </html>
